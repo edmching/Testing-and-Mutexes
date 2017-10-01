@@ -62,6 +62,8 @@ int main() {
 	wc_tester(" ", 0, 0);
 	wc_tester("  ", 0, 0);
 	wc_tester("Hello my name is Edmond", 0, 5);
+	wc_tester("              dsadas", 0, 1);
+	wc_tester("       fdhdaksf fhdsafhdsf                               ", 0, 2);
 
   } catch(UnitTestException &ute) {
     std::cout << ute.info() << std::endl;
