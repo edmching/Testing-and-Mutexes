@@ -61,9 +61,14 @@ int main() {
     wc_tester("hello world", 0, 2);
 	wc_tester(" ", 0, 0);
 	wc_tester("  ", 0, 0);
+	wc_tester("   a", 0, 1);
 	wc_tester("Hello my name is Edmond", 0, 5);
 	wc_tester("              dsadas", 0, 1);
 	wc_tester("       fdhdaksf fhdsafhdsf                               ", 0, 2);
+	wc_tester(" hello a b c d e f", 0, 7);
+	wc_tester("why is the rainbow a scary monster", 1, 7);
+	wc_tester("   ", 0, 0);
+	wc_tester("                        ", 0, 0);
 
   } catch(UnitTestException &ute) {
     std::cout << ute.info() << std::endl;
