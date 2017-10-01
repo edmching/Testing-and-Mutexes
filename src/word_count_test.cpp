@@ -58,17 +58,18 @@ int main() {
   try {
 
     // YOUR TESTS HERE
-    wc_tester("hello world", 0, 2);
-	wc_tester(" ", 0, 0);
-	wc_tester("  ", 0, 0);
-	wc_tester("   a", 0, 1);
-	wc_tester("Hello my name is Edmond", 0, 5);
-	wc_tester("              dsadas", 0, 1);
-	wc_tester("       fdhdaksf fhdsafhdsf                               ", 0, 2);
-	wc_tester(" hello a b c d e f", 0, 7);
-	wc_tester("why is the rainbow a scary monster", 1, 7);
-	wc_tester("   ", 0, 0);
-	wc_tester("                        ", 0, 0);
+	wc_tester("hello world", 0, 2);//two word case
+	wc_tester("Hello my name is Edmond", 0, 5); //normal case
+	wc_tester("", 0, 0);//empty case
+	wc_tester("fdsfjkdsjhkdjsfkjdsfhjkkdshkajsdf", 0, 1);//one word case
+	wc_tester(" ", 0, 0); // space
+	wc_tester("  ", 0, 0);// space case
+	wc_tester("                        ", 0, 0); // long space
+	wc_tester("   a", 0, 1); //space first and word
+	wc_tester("a  ", 0, 1); //word first then space
+	wc_tester(" word ", 0, 1);//spaces beside a word
+	wc_tester("a b c d e f g h i j k", 2, 10); // starting index != 0
+	wc_tester("asdf ddfs", 3, 2);
 
   } catch(UnitTestException &ute) {
     std::cout << ute.info() << std::endl;
