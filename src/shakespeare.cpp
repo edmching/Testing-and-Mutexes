@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <thread>
+#include <chrono>
 
 #include "word_count.h"
 
@@ -173,22 +174,47 @@ int main() {
   // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTIPLE THREADS
   //=============================================================
   /*
-  for (int i = 0; i < 10; ++i) {	
+  auto t3 = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < filenames.size(); ++i) {	
 	  count_character_words(filenames[i], mutex, wcounts);
   }
+  auto t4 = std::chrono::high_resolution_clock::now();
+  auto duration2 = t4 - t3;
+  auto duration_ms2 = std::chrono::duration_cast<std::chrono::milliseconds>(duration2);
+  long ms2 = duration_ms2.count();
+  std::cout << "The operation 1 took " << ms2 << " ms" << std::endl;
   */
+   
+  auto t1 = std::chrono::high_resolution_clock::now();
 
+  //Run four threads at the same time and wait for the four to complete and then do another four
   int nthreads = std::thread::hardware_concurrency();
   std::vector<std::thread> threads;
 
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < nthreads; ++i) {
 	  threads.push_back(
 		  std::thread(count_character_words, filenames[i], std::ref(mutex), std::ref(wcounts))
 	  );
   }
-  for (int k = 0; k < 10; ++k)
-	  threads[k].join();
+  for (int i = 0; i < nthreads; ++i)
+	  threads[i].join();
 
+  for (int i = nthreads; i < filenames.size(); ++i) {
+	  threads.push_back(
+		  std::thread(count_character_words, filenames[i], std::ref(mutex), std::ref(wcounts))
+	  );
+  }
+  for (int i = nthreads; i < filenames.size(); ++i)
+	  threads[i].join();
+
+  auto t2 = std::chrono::high_resolution_clock::now();
+  auto duration = t2 - t1;
+  auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds> (duration);
+  long ms = duration_ms.count();
+  std::cout << "The operation 2 took " << ms << " ms" << std::endl;
+
+
+  //begin sorting character's word count
   auto sorted_wcounts = sort_characters_by_wordcount(wcounts);
 
   // results
