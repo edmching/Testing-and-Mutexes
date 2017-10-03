@@ -97,7 +97,13 @@ void count_character_words(const std::string& filename,
         //=================================================
         // YOUR JOB TO ADD WORD COUNT INFORMATION TO MAP
         //=================================================
+		auto it = wcounts.find(character);
+		if (it == wcounts.end()) 
+			wcounts.insert({ character, 0 });
+		std::lock_guard<std::mutex> lock(mutex);
+		wcounts[character] += nwords;
 
+	
       } else {
         character = "";  // reset character
       }
@@ -120,7 +126,7 @@ bool wc_greater_than(std::pair<std::string,int>& p1, std::pair<std::string,int>&
   // YOUR IMPLEMENTATION HERE TO ORDER p1 AND p2
   //===============================================
 
-  return false;
+  return p1.second>p2.second;
 };
 
 /**
@@ -166,6 +172,22 @@ int main() {
   //=============================================================
   // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTIPLE THREADS
   //=============================================================
+  /*
+  for (int i = 0; i < 10; ++i) {	
+	  count_character_words(filenames[i], mutex, wcounts);
+  }
+  */
+
+  int nthreads = std::thread::hardware_concurrency();
+  std::vector<std::thread> threads;
+
+  for (int i = 0; i < 10; ++i) {
+	  threads.push_back(
+		  std::thread(count_character_words, filenames[i], std::ref(mutex), std::ref(wcounts))
+	  );
+  }
+  for (int k = 0; k < 10; ++k)
+	  threads[k].join();
 
   auto sorted_wcounts = sort_characters_by_wordcount(wcounts);
 
