@@ -26,8 +26,10 @@ void run_logger(const std::string& processname,
     // open file for "append"
     std::ofstream logfile;
     logfile.open(filename, std::ios_base::out | std::ios_base::app);
+	std::unique_lock<cpen333::process::mutex> lock(mutex); //Class_name<Type_variable> object_name(Type_variable_name)
     logfile << processname << ": " << "message " << i << std::endl;
     std::cout << processname << ": " << "message " << i << std::endl;
+	lock.unlock();
     logfile.close();
 
   }

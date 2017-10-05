@@ -13,19 +13,22 @@ int main() {
   const int nmessages = 100;
   const std::string logfile = "system_log.txt";
 
-  for (int i=0; i<nprocesses; ++i) {
-    std::vector<std::string> cmd;
+  for (int i = 0; i < nprocesses; ++i) {
+	  std::vector<std::string> cmd;
 
-    //=================================================
-    //  RUN CHILD PROCESSES (system_logger_child)
-    //      Process arguments:
-    //          - a name for identification in the log
-    //          - a log filename to append to
-    //          - a number of messages to append
-    //=================================================
-    cmd.push_back("./system_logger_child");  // relative command path
-    // other arguments...
-    // cmd.push_back(...);
+	  //=================================================
+	  //  RUN CHILD PROCESSES (system_logger_child)
+	  //      Process arguments:
+	  //          - a name for identification in the log
+	  //          - a log filename to append to
+	  //          - a number of messages to append
+	  //=================================================
+	  cmd.push_back("./system_logger_child");  // relative command path
+	  cmd.push_back("logger" + std::to_string(i));
+	  cmd.push_back(logfile);
+	  cmd.push_back(std::to_string(nmessages));
+	  processes.push_back(
+		cpen333::process::subprocess(cmd,true,false));
 
   }
 
@@ -35,7 +38,7 @@ int main() {
   }
 
   // unlink mutex since we and all child processes are done with it
-  mutex.unlink();
+  mutex.unlink();//linux/osx only
 
   // pause, waiting for keyboard input
   cpen333::pause();
